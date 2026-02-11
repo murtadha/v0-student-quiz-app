@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Volume2, Send, Loader2, RotateCcw, CheckCircle2, XCircle, Pause } from "lucide-react"
 import { generateSpeech, verifySpelling } from "@/lib/spell-actions"
+import { useContentFromUrl } from "@/lib/utils"
 
 // Sample sentence for testing
 const SAMPLE_SENTENCE = "الشمس تشرق من الشرق وتغرب في الغرب"
@@ -36,9 +37,15 @@ function generateWaveformFromFloat32(float32Array: Float32Array): number[] {
   return waveform
 }
 
+type Content = {
+  sentence: string;
+}
+
 export function SpellInterface() {
-  const searchParams = useSearchParams()
-  const sentence = searchParams.get("sentence") || SAMPLE_SENTENCE
+  // const searchParams = useSearchParams()
+  // const sentence = searchParams.get("sentence") || SAMPLE_SENTENCE
+  const content = useContentFromUrl<Content>()
+  const sentence = content.sentence || SAMPLE_SENTENCE
 
   const [isLoadingAudio, setIsLoadingAudio] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -115,7 +122,7 @@ export function SpellInterface() {
         audioContextRef.current.close()
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sentence])
 
   // Update playback progress using AudioContext currentTime
@@ -153,7 +160,7 @@ export function SpellInterface() {
       const source = audioContextRef.current.createBufferSource()
       source.buffer = audioBufferRef.current
       source.connect(audioContextRef.current.destination)
-      
+
       source.onended = () => {
         setIsPlaying(false)
         setPlaybackProgress(0)
@@ -219,15 +226,14 @@ export function SpellInterface() {
                   {waveformData.map((height, index) => {
                     const isPast = index < progressBarIndex
                     const isCurrent = index === progressBarIndex
-                    
+
                     return (
                       <div
                         key={index}
-                        className={`rounded-full transition-all duration-150 ${
-                          isPast || isCurrent
-                            ? "bg-primary"
-                            : "bg-primary/25"
-                        }`}
+                        className={`rounded-full transition-all duration-150 ${isPast || isCurrent
+                          ? "bg-primary"
+                          : "bg-primary/25"
+                          }`}
                         style={{
                           width: `${100 / BAR_COUNT - 1}%`,
                           height: `${height * 80}%`,
@@ -254,11 +260,10 @@ export function SpellInterface() {
               <Button
                 onClick={handlePlay}
                 size="lg"
-                className={`w-full h-14 rounded-2xl text-lg font-medium transition-all ${
-                  isPlaying
-                    ? "bg-primary/20 text-primary border-2 border-primary"
-                    : "bg-primary text-primary-foreground"
-                }`}
+                className={`w-full h-14 rounded-2xl text-lg font-medium transition-all ${isPlaying
+                  ? "bg-primary/20 text-primary border-2 border-primary"
+                  : "bg-primary text-primary-foreground"
+                  }`}
                 variant={isPlaying ? "outline" : "default"}
               >
                 {isPlaying ? (
@@ -308,11 +313,10 @@ export function SpellInterface() {
           <div className="animate-scale-in">
             {/* Accuracy Badge */}
             <div
-              className={`flex items-center justify-center gap-2 mb-4 py-3 px-4 rounded-2xl ${
-                result.isCorrect
-                  ? "bg-success/15 text-success"
-                  : "bg-warning/15 text-warning-foreground"
-              }`}
+              className={`flex items-center justify-center gap-2 mb-4 py-3 px-4 rounded-2xl ${result.isCorrect
+                ? "bg-success/15 text-success"
+                : "bg-warning/15 text-warning-foreground"
+                }`}
             >
               {result.isCorrect ? (
                 <CheckCircle2 className="w-6 h-6" />
@@ -331,11 +335,10 @@ export function SpellInterface() {
                 {result.comparison.map((item, index) => (
                   <div
                     key={index}
-                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
-                      item.correct
-                        ? "bg-success/15 text-success border border-success/30"
-                        : "bg-destructive/15 text-destructive border border-destructive/30"
-                    }`}
+                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${item.correct
+                      ? "bg-success/15 text-success border border-success/30"
+                      : "bg-destructive/15 text-destructive border border-destructive/30"
+                      }`}
                   >
                     <span>{item.word}</span>
                     {!item.correct && item.expected && item.expected !== "(extra)" && (
