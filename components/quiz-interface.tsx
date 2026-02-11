@@ -10,6 +10,7 @@ import { Send, Sparkles } from "lucide-react"
 import { evaluateAnswer, fetchIsWidgetSkippable } from "@/lib/actions"
 import { LatexText } from "@/components/latex-text"
 import { updateLessonHistory } from "@/app/utils"
+import { useContentFromUrl } from "@/lib/utils"
 
 const SUBJECT = "Grade 12 Physics"
 const LESSON = "Capacitors (الفصل الأول - المتسعات)"
@@ -19,15 +20,24 @@ const QUESTION = "ما هي الوظيفة الأساسية للمتسعة؟"
 const ANSWER = "الوظيفة الأساسية للمتسعة هي تخزين الشحنات الكهربائية والطاقة الكهربائية داخلها."
 const FULL_MARK = 5
 
+type Content = {
+  question: string;
+  answer: string;
+  subject: string;
+  lesson: string;
+}
+
 export function QuizInterface() {
   const searchParams = useSearchParams()
+  const content = useContentFromUrl<Content>()
+
   const userId = searchParams.get("userId") || "000000000000000000000000"
   const lessonId = searchParams.get("lessonId") || "000000000000000000000000"
   const widgetId = searchParams.get("widgetId") || "000000000000000000000000"
-  const subject = searchParams.get("subject") || SUBJECT
-  const lesson = searchParams.get("lesson") || LESSON
-  const question = searchParams.get("question") || QUESTION
-  const correctAnswer = searchParams.get("answer") || ANSWER
+  const subject = content?.subject || searchParams.get("subject") || SUBJECT
+  const lesson = content?.lesson || searchParams.get("lesson") || LESSON
+  const question = content?.question || searchParams.get("question") || QUESTION
+  const correctAnswer = content?.answer || searchParams.get("answer") || ANSWER
   const tenant = searchParams.get("tenant") || 'ankido'
 
   const [answer, setAnswer] = useState("")
@@ -68,7 +78,7 @@ export function QuizInterface() {
         setFeedback("اسف صار خطأ بتدقيق الاجابة، بلا زحمة جرب مرة ثانية")
         setFeedbackType("error")
       })
-      .finally(() => { 
+      .finally(() => {
         setTryCount(old => old + 1)
         clearTimeout(timeout)
         setIsLoading(false)
