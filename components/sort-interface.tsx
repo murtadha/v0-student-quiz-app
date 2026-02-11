@@ -24,7 +24,9 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+import { useContentFromUrl } from "@/lib/utils"
 
+const DEFAULT_PROMPT = 'رتّب الجمل بالترتيب الصحيح'
 const SAMPLE_SENTENCES = [
   "استيقظ أحمد من النوم مبكرًا",
   "تناول وجبة الإفطار مع عائلته",
@@ -43,7 +45,7 @@ function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
   const isOriginalOrder = shuffled.every((item, idx) => item === array[idx])
   if (isOriginalOrder && array.length > 1) {
@@ -53,6 +55,11 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 // ── Sortable Item Component ──
+
+type Content = {
+  prompt: string;
+  sentences: string[];
+}
 
 function SortableItem({
   item,
@@ -102,13 +109,12 @@ function SortableItem({
     <div ref={setNodeRef} style={style} className={containerClass}>
       {/* Position number */}
       <div
-        className={`flex items-center justify-center px-3 rounded-r-xl border-l-2 text-sm font-bold shrink-0 transition-colors duration-200 ${
-          isCorrect
+        className={`flex items-center justify-center px-3 rounded-r-xl border-l-2 text-sm font-bold shrink-0 transition-colors duration-200 ${isCorrect
             ? "bg-success/15 text-success border-success/20"
             : isIncorrect
               ? "bg-destructive/15 text-destructive border-destructive/20"
               : "bg-muted/50 text-muted-foreground border-border"
-        }`}
+          }`}
       >
         {index + 1}
       </div>
@@ -164,26 +170,29 @@ function DragOverlayItem({ item, index }: { item: SortItem; index: number }) {
 // ── Main Component ──
 
 export function SortInterface() {
-  const searchParams = useSearchParams()
-  const rawSentences = searchParams.get("sentences")
+  // const searchParams = useSearchParams()
+  // const rawSentences = searchParams.get("sentences")
+  const content = useContentFromUrl<Content>()
+  const rawSentences = content.sentences
+  const correctOrder = content.sentences || SAMPLE_SENTENCES
 
-  const correctOrder = useMemo(() => {
-    if (rawSentences) {
-      try {
-        const parsed = JSON.parse(rawSentences)
-        if (Array.isArray(parsed) && parsed.length > 1) {
-          return parsed.map(String)
-        }
-      } catch {
-        const split = rawSentences
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
-        if (split.length > 1) return split
-      }
-    }
-    return SAMPLE_SENTENCES
-  }, [rawSentences])
+  // const correctOrder = useMemo(() => {
+  //   if (rawSentences) {
+  //     try {
+  //       const parsed = JSON.parse(rawSentences)
+  //       if (Array.isArray(parsed) && parsed.length > 1) {
+  //         return parsed.map(String)
+  //       }
+  //     } catch {
+  //       const split = rawSentences
+  //         .split(",")
+  //         .map((s) => s.trim())
+  //         .filter(Boolean)
+  //       if (split.length > 1) return split
+  //     }
+  //   }
+  //   return SAMPLE_SENTENCES
+  // }, [rawSentences])
 
   const initialItems = useMemo(() => {
     const items: SortItem[] = correctOrder.map((text, index) => ({
@@ -273,7 +282,7 @@ export function SortInterface() {
         {/* Header */}
         <div className="mb-6 animate-slide-up">
           <h1 className="text-2xl font-bold text-foreground mb-2 text-balance">
-            رتّب الجمل بالترتيب الصحيح
+            {content.prompt ?? DEFAULT_PROMPT}
           </h1>
           <p className="text-muted-foreground text-sm">
             اسحب الجمل لترتيبها بالترتيب الصحيح
@@ -317,11 +326,10 @@ export function SortInterface() {
         {hasChecked && (
           <div className="mb-6 animate-scale-in">
             <div
-              className={`flex items-center justify-center gap-3 py-4 px-5 rounded-2xl ${
-                isAllCorrect
+              className={`flex items-center justify-center gap-3 py-4 px-5 rounded-2xl ${isAllCorrect
                   ? "bg-success/15 text-success"
                   : "bg-warning/15 text-warning-foreground"
-              }`}
+                }`}
             >
               {isAllCorrect ? (
                 <CheckCircle2 className="w-7 h-7 shrink-0" />
