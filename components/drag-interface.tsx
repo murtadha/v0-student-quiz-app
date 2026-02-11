@@ -13,6 +13,7 @@ import {
 import useImage from "use-image";
 import { updateLessonHistory } from "@/app/utils";
 import { useSearchParams } from "next/navigation"
+import { useContentFromUrl } from "@/lib/utils";
 
 // Types (should be in types.ts but defining here for now based on schema)
 export interface Dropzone {
@@ -50,11 +51,6 @@ export interface DragDropContent {
   imageFit?: ImageFit;
   dropzones: Dropzone[];
   draggables: DraggableItem[];
-}
-
-interface DragDropFormProps {
-  content: DragDropContent;
-  onChange: (_content: DragDropContent) => void;
 }
 
 const URLImage = ({ src, x, y, width, height, ...props }: any) => {
@@ -141,19 +137,15 @@ const DEFAULT_CONTENT: DragDropContent = {
   },
 };
 
-export default function DragInterface(props: { content?: DragDropContent }) {
-  const search = useSearchParams();
+type Content = {
 
-  let content = undefined;
-  try {
-    content = search.get('content') && JSON.parse(search.get('content'))
-    console.log('Got content:', content)
-  } catch(e) {
-    console.error('Failed to parse content', error, search.get('content'))
-  }
-  
-  if (!content || !content?.dropzones) content = { ...DEFAULT_CONTENT };
-  
+}
+
+export default function DragInterface(props: { content?: DragDropContent }) {
+  // const search = useSearchParams();
+  // if (!content || !content?.dropzones) content = { ...DEFAULT_CONTENT };
+  const content = useContentFromUrl<DragDropContent>() || DEFAULT_CONTENT
+
   const stageRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scaleDown, setScaleDown] = useState(1);

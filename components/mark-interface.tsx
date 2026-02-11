@@ -4,10 +4,10 @@ import { useState, useEffect, useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle, RotateCcw } from "lucide-react"
+import { useContentFromUrl } from "@/lib/utils"
 
-const SAMPLE_PROMPT = "حدد جميع الأفعال في الجملة التالية"
-const SAMPLE_PARAGRAPH =
-  "*يذهب* الطالب إلى المدرسة كل يوم و*يدرس* بجد ثم *يعود* إلى المنزل و*يلعب* مع أصدقائه"
+const SAMPLE_PROMPT = "اين يقع المفعول به في قوله تعالى:"
+const SAMPLE_PARAGRAPH = "{إِنَّمَا يَخْشَى *اللَّهَ* مِنْ عِبَادِهِ الْعُلَمَاءُ}"
 
 type WordState = "idle" | "selected" | "correct" | "incorrect" | "missed"
 
@@ -53,10 +53,18 @@ function parseParagraph(paragraph: string): WordToken[] {
   return tokens
 }
 
+type Content = {
+  prompt: string;
+  paragraph: string;
+}
+
 export function MarkInterface() {
-  const searchParams = useSearchParams()
-  const prompt = searchParams.get("prompt") || SAMPLE_PROMPT
-  const paragraph = searchParams.get("paragraph") || SAMPLE_PARAGRAPH
+  // const searchParams = useSearchParams()
+  // const prompt = searchParams.get("prompt") || SAMPLE_PROMPT
+  // const paragraph = searchParams.get("paragraph") || SAMPLE_PARAGRAPH
+  const content = useContentFromUrl<Content>()
+  const prompt = content.prompt || SAMPLE_PROMPT
+  const paragraph = content.prompt || SAMPLE_PARAGRAPH
 
   const initialTokens = useMemo(() => parseParagraph(paragraph), [paragraph])
 
@@ -192,11 +200,10 @@ export function MarkInterface() {
         {hasChecked && score && (
           <div className="mb-6 animate-scale-in">
             <div
-              className={`flex items-center justify-center gap-3 py-4 px-5 rounded-2xl mb-4 ${
-                isAllCorrect
-                  ? "bg-success/15 text-success"
-                  : "bg-warning/15 text-warning-foreground"
-              }`}
+              className={`flex items-center justify-center gap-3 py-4 px-5 rounded-2xl mb-4 ${isAllCorrect
+                ? "bg-success/15 text-success"
+                : "bg-warning/15 text-warning-foreground"
+                }`}
             >
               {isAllCorrect ? (
                 <CheckCircle2 className="w-7 h-7 shrink-0" />
