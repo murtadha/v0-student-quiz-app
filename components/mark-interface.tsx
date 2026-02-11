@@ -62,7 +62,7 @@ export function MarkInterface() {
   // const searchParams = useSearchParams()
   // const prompt = searchParams.get("prompt") || SAMPLE_PROMPT
   // const paragraph = searchParams.get("paragraph") || SAMPLE_PARAGRAPH
-  const content = useContentFromUrl() as Content
+  const content = useContentFromUrl<Content>()
   const prompt = content.prompt || SAMPLE_PROMPT
   const paragraph = content.prompt || SAMPLE_PARAGRAPH
 
@@ -201,8 +201,8 @@ export function MarkInterface() {
           <div className="mb-6 animate-scale-in">
             <div
               className={`flex items-center justify-center gap-3 py-4 px-5 rounded-2xl mb-4 ${isAllCorrect
-                  ? "bg-success/15 text-success"
-                  : "bg-warning/15 text-warning-foreground"
+                ? "bg-success/15 text-success"
+                : "bg-warning/15 text-warning-foreground"
                 }`}
             >
               {isAllCorrect ? (
