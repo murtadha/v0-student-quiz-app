@@ -66,7 +66,7 @@ export async function evaluateAnswer(
     correctAnswer,
   );
 
-  const log = (body) => fetch(ADMIN_API(tenant), {
+  const log = (body: Record<string, unknown>) => fetch(ADMIN_API(tenant), {
     method: 'POST',
     body: JSON.stringify({
       collection: 'logs',
