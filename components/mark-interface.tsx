@@ -132,7 +132,7 @@ export function MarkInterface() {
 
   const getWordStyles = (token: WordToken) => {
     const base =
-      "inline-flex items-center px-3 py-2 rounded-xl text-lg font-medium transition-all duration-300 select-none"
+      "inline-flex items-center px-3 py-2 rounded-xl text-lg font-medium transition-all duration-300 select-none border-dashed"
 
     switch (token.state) {
       case "selected":
