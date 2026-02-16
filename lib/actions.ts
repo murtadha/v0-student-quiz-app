@@ -144,7 +144,13 @@ export async function evaluateAnswer(
 }
 
 
-const getPrompt = (subject, lectureTitle, question, userAnswer, correctAnswer) => `You are an AI assistant designed to verify student answers for a ${subject} lecture.
+const getPrompt = (
+  subject: string,
+  lectureTitle: string,
+  question: string,
+  userAnswer: string,
+  correctAnswer: string,
+) => `You are an AI assistant designed to verify student answers for a ${subject} lecture.
 The student watched a lecture on ${lectureTitle} for Iraqi high school students.
 I will provide you with a question and the student's typed answer.
 Your task is to:
