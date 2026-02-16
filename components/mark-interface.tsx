@@ -64,7 +64,7 @@ export function MarkInterface() {
   // const paragraph = searchParams.get("paragraph") || SAMPLE_PARAGRAPH
   const content = useContentFromUrl<Content>()
   const prompt = content.prompt || SAMPLE_PROMPT
-  const paragraph = content.prompt || SAMPLE_PARAGRAPH
+  const paragraph = content.paragraph || SAMPLE_PARAGRAPH
 
   const initialTokens = useMemo(() => parseParagraph(paragraph), [paragraph])
 
