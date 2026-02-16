@@ -64,7 +64,7 @@ export function MarkInterface() {
   // const paragraph = searchParams.get("paragraph") || SAMPLE_PARAGRAPH
   const content = useContentFromUrl<Content>()
   const prompt = content.prompt || SAMPLE_PROMPT
-  const paragraph = content.prompt || SAMPLE_PARAGRAPH
+  const paragraph = content.paragraph || SAMPLE_PARAGRAPH
 
   const initialTokens = useMemo(() => parseParagraph(paragraph), [paragraph])
 
@@ -132,7 +132,7 @@ export function MarkInterface() {
 
   const getWordStyles = (token: WordToken) => {
     const base =
-      "inline-flex items-center px-3 py-2 rounded-xl text-lg font-medium transition-all duration-300 select-none"
+      "inline-flex items-center px-2 py-2 rounded-md text-lg font-medium transition-all duration-300 select-none border-dashed"
 
     switch (token.state) {
       case "selected":
@@ -163,7 +163,7 @@ export function MarkInterface() {
         </div>
 
         {/* Selection counter */}
-        <div className="mb-5 flex items-center gap-3 animate-slide-up" style={{ animationDelay: "50ms" }}>
+        {/* <div className="mb-5 flex items-center gap-3 animate-slide-up" style={{ animationDelay: "50ms" }}>
           <div className="flex items-center gap-2 bg-muted rounded-full px-4 py-1.5 text-sm text-muted-foreground">
             <span className="font-bold text-foreground">{selectedCount}</span>
             <span>محددة</span>
@@ -172,14 +172,14 @@ export function MarkInterface() {
             <span className="font-bold">{correctTotal}</span>
             <span>مطلوبة</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Word cloud / paragraph */}
         <div
           className="bg-card rounded-3xl p-5 shadow-lg border border-border mb-6 animate-slide-up"
           style={{ animationDelay: "100ms" }}
         >
-          <div className="flex flex-wrap gap-2 leading-relaxed">
+          <div className="flex flex-wrap gap-1 leading-relaxed">
             {tokens.map((token) => (
               <button
                 key={token.id}
