@@ -1,21 +1,21 @@
 "use server"
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
 const gemini = new GoogleGenerativeAI(GOOGLE_API_KEY ?? '').getGenerativeModel({
   model: 'gemini-2.5-flash',
   // model: 'gemini-flash-lite-latest',
-});
+})
 
 const CORRECT_FEEDBACK = [
   'صحيح!! ',
   'ممتاز!! ',
   'بالضبط!! ',
   'احسنت!! ',
-];
+]
 
-const ADMIN_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data/create`;
-const ADMIN_READ_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data`;
+const ADMIN_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data/create`
+const ADMIN_READ_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data`
 
 export async function fetchIsWidgetSkippable(tenant, userId, lessonId, widgetId) {
   const res = await fetch(ADMIN_READ_API(tenant), {
@@ -23,7 +23,7 @@ export async function fetchIsWidgetSkippable(tenant, userId, lessonId, widgetId)
     body: JSON.stringify({
       collection: 'studentHistory',
       pipeline: [
-        { 
+        {
           $match: {
             studentID: { $oid: userId },
             lessonID: { $oid: lessonId },
@@ -95,7 +95,7 @@ export async function evaluateAnswer(
       } else {
         return { type: "incorrect", feedback: content }
       }
-    } catch (e) { 
+    } catch (e) {
       error = e
     }
   }
