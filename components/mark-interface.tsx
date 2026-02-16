@@ -163,7 +163,7 @@ export function MarkInterface() {
         </div>
 
         {/* Selection counter */}
-        <div className="mb-5 flex items-center gap-3 animate-slide-up" style={{ animationDelay: "50ms" }}>
+        {/* <div className="mb-5 flex items-center gap-3 animate-slide-up" style={{ animationDelay: "50ms" }}>
           <div className="flex items-center gap-2 bg-muted rounded-full px-4 py-1.5 text-sm text-muted-foreground">
             <span className="font-bold text-foreground">{selectedCount}</span>
             <span>محددة</span>
@@ -172,7 +172,7 @@ export function MarkInterface() {
             <span className="font-bold">{correctTotal}</span>
             <span>مطلوبة</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Word cloud / paragraph */}
         <div
