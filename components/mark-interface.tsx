@@ -179,7 +179,7 @@ export function MarkInterface() {
           className="bg-card rounded-3xl p-5 shadow-lg border border-border mb-6 animate-slide-up"
           style={{ animationDelay: "100ms" }}
         >
-          <div className="flex flex-wrap gap-2 leading-relaxed">
+          <div className="flex flex-wrap gap-1 leading-relaxed">
             {tokens.map((token) => (
               <button
                 key={token.id}
