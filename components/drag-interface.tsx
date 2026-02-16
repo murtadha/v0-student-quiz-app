@@ -13,7 +13,7 @@ import {
 import useImage from "use-image";
 import { updateLessonHistory } from "@/app/utils";
 import { useSearchParams } from "next/navigation"
-import { useContentFromUrl } from "@/lib/utils";
+import { remapStaticUrl, useContentFromUrl } from "@/lib/utils";
 
 // Types (should be in types.ts but defining here for now based on schema)
 export interface Dropzone {
@@ -54,7 +54,7 @@ export interface DragDropContent {
 }
 
 const URLImage = ({ src, x, y, width, height, ...props }: any) => {
-  const [img] = useImage(src);
+  const [img] = useImage(remapStaticUrl(src));
   return (
     <KonvaImage
       image={img}
