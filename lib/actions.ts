@@ -1,29 +1,34 @@
 "use server"
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
 const gemini = new GoogleGenerativeAI(GOOGLE_API_KEY ?? '').getGenerativeModel({
   model: 'gemini-2.5-flash',
   // model: 'gemini-flash-lite-latest',
-});
+})
 
 const CORRECT_FEEDBACK = [
   'صحيح!! ',
   'ممتاز!! ',
   'بالضبط!! ',
   'احسنت!! ',
-];
+]
 
-const ADMIN_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data/create`;
-const ADMIN_READ_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data`;
+const ADMIN_API = (tenant: string) => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data/create`
+const ADMIN_READ_API = (tenant: string) => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data`
 
-export async function fetchIsWidgetSkippable(tenant, userId, lessonId, widgetId) {
+export async function fetchIsWidgetSkippable(
+  tenant: string,
+  userId: string,
+  lessonId: string,
+  widgetId: string,
+) {
   const res = await fetch(ADMIN_READ_API(tenant), {
     method: 'POST',
     body: JSON.stringify({
       collection: 'studentHistory',
       pipeline: [
-        { 
+        {
           $match: {
             studentID: { $oid: userId },
             lessonID: { $oid: lessonId },
@@ -61,7 +66,7 @@ export async function evaluateAnswer(
     correctAnswer,
   );
 
-  const log = (body) => fetch(ADMIN_API(tenant), {
+  const log = (body: Record<string, unknown>) => fetch(ADMIN_API(tenant), {
     method: 'POST',
     body: JSON.stringify({
       collection: 'logs',
@@ -95,7 +100,7 @@ export async function evaluateAnswer(
       } else {
         return { type: "incorrect", feedback: content }
       }
-    } catch (e) { 
+    } catch (e) {
       error = e
     }
   }
@@ -139,7 +144,13 @@ export async function evaluateAnswer(
 }
 
 
-const getPrompt = (subject, lectureTitle, question, userAnswer, correctAnswer) => `You are an AI assistant designed to verify student answers for a ${subject} lecture.
+const getPrompt = (
+  subject: string,
+  lectureTitle: string,
+  question: string,
+  userAnswer: string,
+  correctAnswer: string,
+) => `You are an AI assistant designed to verify student answers for a ${subject} lecture.
 The student watched a lecture on ${lectureTitle} for Iraqi high school students.
 I will provide you with a question and the student's typed answer.
 Your task is to:
