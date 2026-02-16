@@ -14,8 +14,8 @@ const CORRECT_FEEDBACK = [
   'احسنت!! ',
 ]
 
-const ADMIN_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data/create`
-const ADMIN_READ_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data`
+const ADMIN_API = (tenant: string) => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data/create`
+const ADMIN_READ_API = (tenant: string) => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data`
 
 export async function fetchIsWidgetSkippable(
   tenant: string,
