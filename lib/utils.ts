@@ -18,3 +18,10 @@ export function useContentFromUrl<T extends object>() {
     }
   }, [content])
 }
+
+const OLD_BASE_URL = 'https://assets.corrsy.com/';
+const NEW_BASE_URL = 'https://d1iycn3b45fkls.cloudfront.net/';
+
+export function remapStaticUrl<T extends string | undefined>(url: T): T {
+  return url?.replace(OLD_BASE_URL, NEW_BASE_URL) as T;
+}
