@@ -17,7 +17,12 @@ const CORRECT_FEEDBACK = [
 const ADMIN_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data/create`
 const ADMIN_READ_API = tenant => `https://${tenant}.admin.v2.educationforalliraqis.com/api/public/data`
 
-export async function fetchIsWidgetSkippable(tenant, userId, lessonId, widgetId) {
+export async function fetchIsWidgetSkippable(
+  tenant: string,
+  userId: string,
+  lessonId: string,
+  widgetId: string,
+) {
   const res = await fetch(ADMIN_READ_API(tenant), {
     method: 'POST',
     body: JSON.stringify({
