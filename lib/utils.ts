@@ -7,15 +7,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function useContentFromUrl<T extends object>() {
+export function useContentFromUrl<T extends object>(fallback?: T) {
   const search = useSearchParams()
   const content = search.get('content')
   return useMemo(() => {
     try {
-      return JSON.parse(content || '{}') as T || {} as T
+      if (content) return JSON.parse(content) as T
     } catch (e) {
-      return {} as T
     }
+    return (fallback ?? {}) as T
   }, [content])
 }
 
