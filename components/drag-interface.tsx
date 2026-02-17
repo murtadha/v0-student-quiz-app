@@ -144,7 +144,7 @@ type Content = {
 export default function DragInterface(props: { content?: DragDropContent }) {
   // const search = useSearchParams();
   // if (!content || !content?.dropzones) content = { ...DEFAULT_CONTENT };
-  const rawContent = useContentFromUrl<DragDropContent>() || DEFAULT_CONTENT
+  const rawContent = useContentFromUrl<DragDropContent>(DEFAULT_CONTENT)
 
   const stageRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
