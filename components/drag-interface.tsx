@@ -11,8 +11,6 @@ import {
   Text,
 } from "react-konva";
 import useImage from "use-image";
-import { updateLessonHistory } from "@/app/utils";
-import { useSearchParams } from "next/navigation"
 import { remapStaticUrl, useContentFromUrl } from "@/lib/utils";
 
 // Types (should be in types.ts but defining here for now based on schema)
