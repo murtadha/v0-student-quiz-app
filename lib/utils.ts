@@ -12,9 +12,10 @@ export function useContentFromUrl<T extends object>(fallback?: T) {
   const content = search.get('content')
   return useMemo(() => {
     try {
-      return (content && JSON.parse(content || '{}') as T) || fallback || {} as T
+      if (content) return JSON.parse(content) as T
+      return (fallback ?? {}) as T
     } catch (e) {
-      return fallback
+      return (fallback ?? {}) as T
     }
   }, [content])
 }
