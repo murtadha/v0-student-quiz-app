@@ -13,10 +13,9 @@ export function useContentFromUrl<T extends object>(fallback?: T) {
   return useMemo(() => {
     try {
       if (content) return JSON.parse(content) as T
-      return (fallback ?? {}) as T
     } catch (e) {
-      return (fallback ?? {}) as T
     }
+    return (fallback ?? {}) as T
   }, [content])
 }
 
