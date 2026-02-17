@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Group,
   Image as KonvaImage,
@@ -144,7 +144,7 @@ type Content = {
 export default function DragInterface(props: { content?: DragDropContent }) {
   // const search = useSearchParams();
   // if (!content || !content?.dropzones) content = { ...DEFAULT_CONTENT };
-  const content = useContentFromUrl<DragDropContent>() || DEFAULT_CONTENT
+  const rawContent = useContentFromUrl<DragDropContent>() || DEFAULT_CONTENT
 
   const stageRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -169,27 +169,30 @@ export default function DragInterface(props: { content?: DragDropContent }) {
     Record<string, boolean>
   >({});
   const [score, setScore] = useState(0);
-  content.draggables = content.draggables.map((d) => ({
-    ...d,
-    initialX: d.initialX * scaleDown,
-    initialY: d.initialY * scaleDown,
-    width: d.width * scaleDown,
-    height: d.height * scaleDown,
-  }));
-  content.dropzones = content.dropzones.map((d) => ({
-    ...d,
-    x: d.x * scaleDown,
-    y: d.y * scaleDown,
-    width: d.width * scaleDown,
-    height: d.height * scaleDown,
-  }));
-  content.imageFit = content.imageFit && {
-    ...content.imageFit,
-    height: content.imageFit.height * scaleDown,
-    width: content.imageFit.width * scaleDown,
-    x: content.imageFit.x * scaleDown,
-    y: content.imageFit.y * scaleDown,
-  };
+  const content = useMemo(() => ({
+    ...rawContent,
+    draggables: rawContent.draggables.map((d) => ({
+      ...d,
+      initialX: d.initialX * scaleDown,
+      initialY: d.initialY * scaleDown,
+      width: d.width * scaleDown,
+      height: d.height * scaleDown,
+    })),
+    dropzones: rawContent.dropzones.map((d) => ({
+      ...d,
+      x: d.x * scaleDown,
+      y: d.y * scaleDown,
+      width: d.width * scaleDown,
+      height: d.height * scaleDown,
+    })),
+    imageFit: rawContent.imageFit && {
+      ...rawContent.imageFit,
+      height: rawContent.imageFit.height * scaleDown,
+      width: rawContent.imageFit.width * scaleDown,
+      x: rawContent.imageFit.x * scaleDown,
+      y: rawContent.imageFit.y * scaleDown,
+    },
+  }), [rawContent]);
 
   // Preview state: track positions of draggables independently
   const [previewPositions, setPreviewPositions] = useState<
