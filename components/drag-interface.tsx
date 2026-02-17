@@ -190,7 +190,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
       x: rawContent.imageFit.x * scaleDown,
       y: rawContent.imageFit.y * scaleDown,
     },
-  }), [rawContent]);
+  }), [rawContent, scaleDown]);
 
   // Preview state: track positions of draggables independently
   const [previewPositions, setPreviewPositions] = useState<
