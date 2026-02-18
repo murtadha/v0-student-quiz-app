@@ -253,11 +253,10 @@ export function MarkInterface() {
               onClick={() => {
                 window.location.search = window.location.search + "&success"
               }}
-              variant="outline"
               size="lg"
               className="w-full h-14 rounded-2xl text-lg font-medium"
             >
-              كملسشس
+              كمل
             </Button>
           )}
         </div>
