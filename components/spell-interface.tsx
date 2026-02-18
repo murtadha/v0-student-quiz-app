@@ -67,7 +67,7 @@ export function SpellInterface() {
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null)
   const startTimeRef = useRef<number>(0)
   const animationRef = useRef<number | null>(null)
-  const ltr = useMemo(() => isLTR(sentence), [sentence])
+  const dir = useMemo(() => isLTR(sentence), [sentence]) ? "ltr" : "rtl"
 
   // Generate speech on mount
   useEffect(() => {
@@ -292,7 +292,7 @@ export function SpellInterface() {
               placeholder="اكتب ما سمعته هنا..."
               className="min-h-[120px] text-lg rounded-2xl border-2 border-border focus:border-primary pr-4 pl-14 py-4 resize-none"
               disabled={isSubmitting || (result?.isCorrect ?? false)}
-              dir="rtl"
+              dir={dir}
             />
             <Button
               onClick={handleSubmit}
@@ -332,7 +332,7 @@ export function SpellInterface() {
             {/* Word-by-word comparison */}
             <div className="bg-card rounded-2xl p-4 border border-border mb-4">
               <p className="text-sm text-muted-foreground mb-3">مقارنة الكلمات:</p>
-              <div className="flex flex-wrap gap-2" dir={ltr ? "ltr" : "rtl"}>
+              <div className="flex flex-wrap gap-2" dir={dir}>
                 {result.comparison.map((item, index) => (
                   <div
                     key={index}
