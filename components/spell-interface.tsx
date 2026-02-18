@@ -9,7 +9,7 @@ import { generateSpeech, verifySpelling } from "@/lib/spell-actions"
 import { useContentFromUrl } from "@/lib/utils"
 
 // Sample sentence for testing
-const SAMPLE_SENTENCE = "الشمس تشرق من الشرق وتغرب في الغرب"
+const SAMPLE_SENTENCE = "Welcome to Corrsy"
 
 // Number of bars in the waveform
 const BAR_COUNT = 40
