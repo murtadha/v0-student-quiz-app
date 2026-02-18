@@ -365,7 +365,6 @@ export function SortInterface() {
               size="lg"
               className="w-full h-14 rounded-2xl text-lg font-medium"
             >
-              <RotateCcw className="w-5 h-5 ml-2" />
               كمل
             </Button>
           ) : null}
