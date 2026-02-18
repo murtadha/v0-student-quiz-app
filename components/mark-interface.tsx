@@ -257,7 +257,7 @@ export function MarkInterface() {
               size="lg"
               className="w-full h-14 rounded-2xl text-lg font-medium"
             >
-              كمل
+              كملسشس
             </Button>
           )}
         </div>
