@@ -292,7 +292,7 @@ export function SpellInterface() {
               placeholder="اكتب ما سمعته هنا..."
               className="min-h-[120px] text-lg rounded-2xl border-2 border-border focus:border-primary pr-4 pl-14 py-4 resize-none"
               disabled={isSubmitting || (result?.isCorrect ?? false)}
-              dir={value ? dir : 'rtl'}
+              dir={userInput ? dir : 'rtl'}
             />
             <Button
               onClick={handleSubmit}
