@@ -278,7 +278,7 @@ export function MatchInterface() {
         </div>
 
         {/* Completion celebration */}
-        {isComplete && (
+        {(isComplete || true) && (
           <div className="text-center animate-scale-in">
             {/* <div className="inline-flex items-center gap-2 bg-success/15 text-success px-6 py-4 rounded-2xl mb-4">
               <CheckCircle2 className="w-6 h-6" />
