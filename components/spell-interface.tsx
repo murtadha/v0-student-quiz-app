@@ -370,6 +370,10 @@ export function SpellInterface() {
   )
 }
 
+function isRTL(sentence: string) {
+  return (sentence.match(/[a-zA-Z]/g)?.length ?? 0) > (sentence.replace(/\s*/g, '').length * 0.5)
+}
+
 function verifySpelling(
   original: string,
   userInput: string
