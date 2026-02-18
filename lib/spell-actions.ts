@@ -54,22 +54,22 @@ async function getAudioFromS3(hash: string): Promise<string | null> {
     })
 
     const response = await s3Client.send(command)
-    
+
     if (response.Body) {
       // Convert stream to base64
       const chunks: Uint8Array[] = []
       const reader = response.Body.transformToWebStream().getReader()
-      
+
       while (true) {
         const { done, value } = await reader.read()
         if (done) break
         if (value) chunks.push(value)
       }
-      
+
       const buffer = Buffer.concat(chunks)
       return buffer.toString("base64")
     }
-    
+
     return null
   } catch (error: unknown) {
     // If the file doesn't exist, return null
@@ -87,7 +87,7 @@ async function getAudioFromS3(hash: string): Promise<string | null> {
 async function storeAudioInS3(hash: string, audioData: string): Promise<void> {
   try {
     const buffer = Buffer.from(audioData, "base64")
-    
+
     const command = new PutObjectCommand({
       Bucket: S3_BUCKET_NAME,
       Key: `audio/${hash}.raw`,
@@ -145,55 +145,55 @@ export async function generateSpeech(text: string): Promise<{ audioData: string 
   }
 }
 
-export async function verifySpelling(
-  original: string,
-  userInput: string
-): Promise<{
-  isCorrect: boolean
-  accuracy: number
-  comparison: Array<{ word: string; correct: boolean; expected?: string }>
-}> {
-  // Normalize both strings for comparison
-  const normalizeText = (text: string) =>
-    text
-      .trim()
-      .toLowerCase()
-      .replace(/[^\p{L}\p{N}\s]/gu, "") // Remove punctuation, keep letters/numbers/spaces (Unicode aware)
-      .replace(/\s+/g, " ") // Normalize whitespace
+// export async function verifySpelling(
+//   original: string,
+//   userInput: string
+// ): Promise<{
+//   isCorrect: boolean
+//   accuracy: number
+//   comparison: Array<{ word: string; correct: boolean; expected?: string }>
+// }> {
+//   // Normalize both strings for comparison
+//   const normalizeText = (text: string) =>
+//     text
+//       .trim()
+//       .toLowerCase()
+//       .replace(/[^\p{L}\p{N}\s]/gu, "") // Remove punctuation, keep letters/numbers/spaces (Unicode aware)
+//       .replace(/\s+/g, " ") // Normalize whitespace
 
-  const originalNormalized = normalizeText(original)
-  const userNormalized = normalizeText(userInput)
+//   const originalNormalized = normalizeText(original)
+//   const userNormalized = normalizeText(userInput)
 
-  const originalWords = originalNormalized.split(" ").filter(Boolean)
-  const userWords = userNormalized.split(" ").filter(Boolean)
+//   const originalWords = originalNormalized.split(" ").filter(Boolean)
+//   const userWords = userNormalized.split(" ").filter(Boolean)
 
-  const comparison: Array<{ word: string; correct: boolean; expected?: string }> = []
-  let correctCount = 0
+//   const comparison: Array<{ word: string; correct: boolean; expected?: string }> = []
+//   let correctCount = 0
 
-  // Compare word by word
-  const maxLength = Math.max(originalWords.length, userWords.length)
+//   // Compare word by word
+//   const maxLength = Math.max(originalWords.length, userWords.length)
 
-  for (let i = 0; i < maxLength; i++) {
-    const originalWord = originalWords[i] || ""
-    const userWord = userWords[i] || ""
+//   for (let i = 0; i < maxLength; i++) {
+//     const originalWord = originalWords[i] || ""
+//     const userWord = userWords[i] || ""
 
-    if (userWord === originalWord) {
-      comparison.push({ word: userWord || "(missing)", correct: true })
-      if (userWord) correctCount++
-    } else if (userWord && !originalWord) {
-      // Extra word
-      comparison.push({ word: userWord, correct: false, expected: "(extra)" })
-    } else if (!userWord && originalWord) {
-      // Missing word
-      comparison.push({ word: "(missing)", correct: false, expected: originalWord })
-    } else {
-      // Wrong word
-      comparison.push({ word: userWord, correct: false, expected: originalWord })
-    }
-  }
+//     if (userWord === originalWord) {
+//       comparison.push({ word: userWord || "(missing)", correct: true })
+//       if (userWord) correctCount++
+//     } else if (userWord && !originalWord) {
+//       // Extra word
+//       comparison.push({ word: userWord, correct: false, expected: "(extra)" })
+//     } else if (!userWord && originalWord) {
+//       // Missing word
+//       comparison.push({ word: "(missing)", correct: false, expected: originalWord })
+//     } else {
+//       // Wrong word
+//       comparison.push({ word: userWord, correct: false, expected: originalWord })
+//     }
+//   }
 
-  const accuracy = originalWords.length > 0 ? (correctCount / originalWords.length) * 100 : 0
-  const isCorrect = accuracy >= 90 // Allow 90% tolerance
+//   const accuracy = originalWords.length > 0 ? (correctCount / originalWords.length) * 100 : 0
+//   const isCorrect = accuracy >= 90 // Allow 90% tolerance
 
-  return { isCorrect, accuracy, comparison }
-}
+//   return { isCorrect, accuracy, comparison }
+// }
