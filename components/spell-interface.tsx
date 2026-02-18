@@ -353,15 +353,15 @@ export function SpellInterface() {
             </div>
 
             {/* Retry Button */}
-            {!result.isCorrect && (
+            {(!result.isCorrect || true) && (
               <Button
-                onClick={handleRetry}
-                variant="outline"
+                onClick={() => {
+                  window.location.search = window.location.search + "&success"
+                }}
                 size="lg"
-                className="w-full h-12 rounded-2xl bg-transparent"
+                className="w-full h-12 rounded-2xl"
               >
-                <RotateCcw className="w-5 h-5 ml-2" />
-                حاول مرة أخرى
+                كمل
               </Button>
             )}
           </div>
