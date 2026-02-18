@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -67,6 +67,7 @@ export function SpellInterface() {
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null)
   const startTimeRef = useRef<number>(0)
   const animationRef = useRef<number | null>(null)
+  const ltr = useMemo(() => isLTR(sentence), [sentence])
 
   // Generate speech on mount
   useEffect(() => {
@@ -331,7 +332,7 @@ export function SpellInterface() {
             {/* Word-by-word comparison */}
             <div className="bg-card rounded-2xl p-4 border border-border mb-4">
               <p className="text-sm text-muted-foreground mb-3">مقارنة الكلمات:</p>
-              <div className="flex flex-wrap gap-2" dir="ltr">
+              <div className="flex flex-wrap gap-2" dir={ltr ? "ltr" : "rtl"}>
                 {result.comparison.map((item, index) => (
                   <div
                     key={index}
@@ -366,11 +367,11 @@ export function SpellInterface() {
           </div>
         )}
       </div>
-    </main>
+    </main >
   )
 }
 
-function isRTL(sentence: string) {
+function isLTR(sentence: string) {
   return (sentence.match(/[a-zA-Z]/g)?.length ?? 0) > (sentence.replace(/\s*/g, '').length * 0.5)
 }
 
