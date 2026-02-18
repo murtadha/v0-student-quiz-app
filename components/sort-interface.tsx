@@ -110,10 +110,10 @@ function SortableItem({
       {/* Position number */}
       <div
         className={`flex items-center justify-center px-3 rounded-r-xl border-l-2 text-sm font-bold shrink-0 transition-colors duration-200 ${isCorrect
-            ? "bg-success/15 text-success border-success/20"
-            : isIncorrect
-              ? "bg-destructive/15 text-destructive border-destructive/20"
-              : "bg-muted/50 text-muted-foreground border-border"
+          ? "bg-success/15 text-success border-success/20"
+          : isIncorrect
+            ? "bg-destructive/15 text-destructive border-destructive/20"
+            : "bg-muted/50 text-muted-foreground border-border"
           }`}
       >
         {index + 1}
@@ -327,8 +327,8 @@ export function SortInterface() {
           <div className="mb-6 animate-scale-in">
             <div
               className={`flex items-center justify-center gap-3 py-4 px-5 rounded-2xl ${isAllCorrect
-                  ? "bg-success/15 text-success"
-                  : "bg-warning/15 text-warning-foreground"
+                ? "bg-success/15 text-success"
+                : "bg-warning/15 text-warning-foreground"
                 }`}
             >
               {isAllCorrect ? (
@@ -359,13 +359,14 @@ export function SortInterface() {
             </Button>
           ) : !isAllCorrect ? (
             <Button
-              onClick={handleRetry}
-              variant="outline"
+              onClick={() => {
+                window.location.search = window.location.search + "&success"
+              }}
               size="lg"
-              className="w-full h-14 rounded-2xl text-lg font-medium bg-transparent"
+              className="w-full h-14 rounded-2xl text-lg font-medium"
             >
               <RotateCcw className="w-5 h-5 ml-2" />
-              حاول مرة أخرى
+              كمل
             </Button>
           ) : null}
         </div>
