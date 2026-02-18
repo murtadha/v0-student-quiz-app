@@ -331,7 +331,7 @@ export function SpellInterface() {
             {/* Word-by-word comparison */}
             <div className="bg-card rounded-2xl p-4 border border-border mb-4">
               <p className="text-sm text-muted-foreground mb-3">مقارنة الكلمات:</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2" dir="ltr">
                 {result.comparison.map((item, index) => (
                   <div
                     key={index}
