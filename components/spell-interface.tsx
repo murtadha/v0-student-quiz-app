@@ -313,7 +313,7 @@ export function SpellInterface() {
         {result && (
           <div className="animate-scale-in">
             {/* Accuracy Badge */}
-            <div
+            {/* <div
               className={`flex items-center justify-center gap-2 mb-4 py-3 px-4 rounded-2xl ${result.isCorrect
                 ? "bg-success/15 text-success"
                 : "bg-warning/15 text-warning-foreground"
@@ -327,7 +327,7 @@ export function SpellInterface() {
               <span className="font-medium">
                 {result.isCorrect ? "ممتاز! إجابة صحيحة" : "حاول مرة أخرى"}
               </span>
-            </div>
+            </div> */}
 
             {/* Word-by-word comparison */}
             <div className="bg-card rounded-2xl p-4 border border-border mb-4">
