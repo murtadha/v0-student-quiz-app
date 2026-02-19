@@ -465,6 +465,7 @@ const DraggableGroup = ({
   return (
     <>
       <Group
+        key={Date.now()}
         id={item.id}
         draggable={!isValidated}
         x={item.initialX}
