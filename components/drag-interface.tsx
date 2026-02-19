@@ -135,10 +135,6 @@ const DEFAULT_CONTENT: DragDropContent = {
   },
 };
 
-type Content = {
-
-}
-
 export default function DragInterface(props: { content?: DragDropContent }) {
   // const search = useSearchParams();
   // if (!content || !content?.dropzones) content = { ...DEFAULT_CONTENT };
@@ -420,6 +416,16 @@ const DropzoneGroup = ({ dropzone }: { dropzone: Dropzone }) => {
           strokeWidth={2}
           dash={[5, 5]}
           cornerRadius={5}
+        />
+        <Text
+          text={dropzone.label}
+          width={dropzone.width}
+          height={dropzone.height}
+          align="center"
+          verticalAlign="middle"
+          fontSize={14}
+          fill="#333"
+          visible={!isEditing}
         />
       </Group>
     </>
