@@ -248,17 +248,17 @@ export function MarkInterface() {
             >
               تحقق من الإجابة
             </Button>
-          ) : !isAllCorrect ? (
+          ) : (
             <Button
-              onClick={handleRetry}
-              variant="outline"
+              onClick={() => {
+                window.location.search = window.location.search + "&success"
+              }}
               size="lg"
-              className="w-full h-14 rounded-2xl text-lg font-medium bg-transparent"
+              className="w-full h-14 rounded-2xl text-lg font-medium"
             >
-              <RotateCcw className="w-5 h-5 ml-2" />
-              حاول مرة أخرى
+              كمل
             </Button>
-          ) : null}
+          )}
         </div>
       </div>
     </main>

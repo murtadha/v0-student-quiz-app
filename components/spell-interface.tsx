@@ -1,15 +1,15 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Volume2, Send, Loader2, RotateCcw, CheckCircle2, XCircle, Pause } from "lucide-react"
-import { generateSpeech, verifySpelling } from "@/lib/spell-actions"
+import { generateSpeech } from "@/lib/spell-actions"
 import { useContentFromUrl } from "@/lib/utils"
 
 // Sample sentence for testing
-const SAMPLE_SENTENCE = "الشمس تشرق من الشرق وتغرب في الغرب"
+const SAMPLE_SENTENCE = "Welcome to Corrsy"
 
 // Number of bars in the waveform
 const BAR_COUNT = 40
@@ -67,6 +67,7 @@ export function SpellInterface() {
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null)
   const startTimeRef = useRef<number>(0)
   const animationRef = useRef<number | null>(null)
+  const dir = useMemo(() => isLTR(sentence), [sentence]) ? "ltr" : "rtl"
 
   // Generate speech on mount
   useEffect(() => {
@@ -180,10 +181,10 @@ export function SpellInterface() {
   const handleSubmit = async () => {
     if (!userInput.trim() || isSubmitting) return
 
-    setIsSubmitting(true)
-    const verificationResult = await verifySpelling(sentence, userInput)
+    // setIsSubmitting(true)
+    const verificationResult = verifySpelling(sentence, userInput)
     setResult(verificationResult)
-    setIsSubmitting(false)
+    // setIsSubmitting(false)
   }
 
   const handleRetry = () => {
@@ -291,7 +292,7 @@ export function SpellInterface() {
               placeholder="اكتب ما سمعته هنا..."
               className="min-h-[120px] text-lg rounded-2xl border-2 border-border focus:border-primary pr-4 pl-14 py-4 resize-none"
               disabled={isSubmitting || (result?.isCorrect ?? false)}
-              dir="rtl"
+              dir={userInput ? dir : 'rtl'}
             />
             <Button
               onClick={handleSubmit}
@@ -312,7 +313,7 @@ export function SpellInterface() {
         {result && (
           <div className="animate-scale-in">
             {/* Accuracy Badge */}
-            <div
+            {/* <div
               className={`flex items-center justify-center gap-2 mb-4 py-3 px-4 rounded-2xl ${result.isCorrect
                 ? "bg-success/15 text-success"
                 : "bg-warning/15 text-warning-foreground"
@@ -326,12 +327,12 @@ export function SpellInterface() {
               <span className="font-medium">
                 {result.isCorrect ? "ممتاز! إجابة صحيحة" : "حاول مرة أخرى"}
               </span>
-            </div>
+            </div> */}
 
             {/* Word-by-word comparison */}
             <div className="bg-card rounded-2xl p-4 border border-border mb-4">
               <p className="text-sm text-muted-foreground mb-3">مقارنة الكلمات:</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2" dir={dir}>
                 {result.comparison.map((item, index) => (
                   <div
                     key={index}
@@ -352,20 +353,77 @@ export function SpellInterface() {
             </div>
 
             {/* Retry Button */}
-            {!result.isCorrect && (
+            {(!result.isCorrect || true) && (
               <Button
-                onClick={handleRetry}
-                variant="outline"
+                onClick={() => {
+                  window.location.search = window.location.search + "&success"
+                }}
                 size="lg"
-                className="w-full h-12 rounded-2xl bg-transparent"
+                className="w-full h-12 rounded-2xl"
               >
-                <RotateCcw className="w-5 h-5 ml-2" />
-                حاول مرة أخرى
+                كمل
               </Button>
             )}
           </div>
         )}
       </div>
-    </main>
+    </main >
   )
+}
+
+function isLTR(sentence: string) {
+  return (sentence.match(/[a-zA-Z]/g)?.length ?? 0) > (sentence.replace(/\s*/g, '').length * 0.5)
+}
+
+function verifySpelling(
+  original: string,
+  userInput: string
+): {
+  isCorrect: boolean
+  accuracy: number
+  comparison: Array<{ word: string; correct: boolean; expected?: string }>
+} {
+  // Normalize both strings for comparison
+  const normalizeText = (text: string) =>
+    text
+      .trim()
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s]/gu, "") // Remove punctuation, keep letters/numbers/spaces (Unicode aware)
+      .replace(/\s+/g, " ") // Normalize whitespace
+
+  const originalNormalized = normalizeText(original)
+  const userNormalized = normalizeText(userInput)
+
+  const originalWords = originalNormalized.split(" ").filter(Boolean)
+  const userWords = userNormalized.split(" ").filter(Boolean)
+
+  const comparison: Array<{ word: string; correct: boolean; expected?: string }> = []
+  let correctCount = 0
+
+  // Compare word by word
+  const maxLength = Math.max(originalWords.length, userWords.length)
+
+  for (let i = 0; i < maxLength; i++) {
+    const originalWord = originalWords[i] || ""
+    const userWord = userWords[i] || ""
+
+    if (userWord === originalWord) {
+      comparison.push({ word: userWord || "(missing)", correct: true })
+      if (userWord) correctCount++
+    } else if (userWord && !originalWord) {
+      // Extra word
+      comparison.push({ word: userWord, correct: false, expected: "(extra)" })
+    } else if (!userWord && originalWord) {
+      // Missing word
+      comparison.push({ word: "(missing)", correct: false, expected: originalWord })
+    } else {
+      // Wrong word
+      comparison.push({ word: userWord, correct: false, expected: originalWord })
+    }
+  }
+
+  const accuracy = originalWords.length > 0 ? (correctCount / originalWords.length) * 100 : 0
+  const isCorrect = accuracy >= 90 // Allow 90% tolerance
+
+  return { isCorrect, accuracy, comparison }
 }
