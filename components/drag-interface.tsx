@@ -381,7 +381,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
             setIsValidated(true);
           }}
           size="lg"
-          className="w-full h-12 px-4 mb-4 mx-2"
+          className="w-full h-12 px-4 mb-4"
         >
           تدقيق الاجابة
         </Button>
@@ -391,7 +391,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
             window.location.search = window.location.search + "&success"
           }}
           size="lg"
-          className="w-full h-12 px-4 mb-4 mx-2"
+          className="w-full h-12 px-4 mb-4"
         >
           كمل
         </Button>
