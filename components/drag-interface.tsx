@@ -463,45 +463,43 @@ const DraggableGroup = ({
   }
 
   return (
-    <>
-      <Group
-        key={Date.now()}
-        id={item.id}
-        draggable={!isValidated}
-        x={item.initialX}
-        y={item.initialY}
+    <Group
+      key={Date.now()}
+      id={item.id}
+      draggable={!isValidated}
+      x={item.initialX}
+      y={item.initialY}
+      width={item.width}
+      height={item.height}
+      onDragEnd={onDragEnd}
+      ref={shapeRef}
+    >
+      <Rect
         width={item.width}
         height={item.height}
-        onDragEnd={onDragEnd}
-        ref={shapeRef}
-      >
-        <Rect
-          width={item.width}
-          height={item.height}
-          fill={fillColor}
-          stroke={borderColor}
-          strokeWidth={isValidated ? 3 : 1}
-          shadowColor="black"
-          shadowBlur={5}
-          shadowOpacity={0.2}
-          cornerRadius={4}
-        />
-        <Text
-          text={item.text}
-          width={item.width}
-          height={item.height}
-          align="center"
-          verticalAlign="middle"
-          fontSize={14}
-          fill={
-            isValidated && isCorrect
-              ? "#16a34a"
-              : isValidated && !isCorrect
-                ? "#dc2626"
-                : "#000"
-          }
-        />
-      </Group>
-    </>
+        fill={fillColor}
+        stroke={borderColor}
+        strokeWidth={isValidated ? 3 : 1}
+        shadowColor="black"
+        shadowBlur={5}
+        shadowOpacity={0.2}
+        cornerRadius={4}
+      />
+      <Text
+        text={item.text}
+        width={item.width}
+        height={item.height}
+        align="center"
+        verticalAlign="middle"
+        fontSize={14}
+        fill={
+          isValidated && isCorrect
+            ? "#16a34a"
+            : isValidated && !isCorrect
+              ? "#dc2626"
+              : "#000"
+        }
+      />
+    </Group>
   );
 };
