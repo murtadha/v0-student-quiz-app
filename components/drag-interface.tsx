@@ -135,10 +135,6 @@ const DEFAULT_CONTENT: DragDropContent = {
   },
 };
 
-type Content = {
-
-}
-
 export default function DragInterface(props: { content?: DragDropContent }) {
   // const search = useSearchParams();
   // if (!content || !content?.dropzones) content = { ...DEFAULT_CONTENT };
@@ -194,7 +190,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
 
   // Preview state: track positions of draggables independently
   const [previewPositions, setPreviewPositions] = useState<
-    Record<string, { x: number; y: number }>
+    Record<string, { key?: number | undefined; x: number; y: number }>
   >({});
 
   // Update stage size based on container - FORCE SQUARE ASPECT RATIO
@@ -256,7 +252,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
 
                 return (
                   <DraggableGroup
-                    key={draggable.id}
+                    key={draggable.id + currentPos?.key}
                     item={{
                       ...draggable,
                       initialX: currentPos.x,
@@ -266,7 +262,11 @@ export default function DragInterface(props: { content?: DragDropContent }) {
                     isCorrect={isCorrect}
                     onDragEnd={(e: any) => {
                       // Find intersecting dropzone
-                      let newPos = { x: e.target.x(), y: e.target.y() };
+                      let newPos = {
+                        key: Date.now(),
+                        x: Math.max(0, Math.min(e.target.x(), stageSize.width - draggable.width)),
+                        y: Math.max(0, Math.min(e.target.y(), stageSize.height - draggable.height)),
+                      };
 
                       for (const dz of content.dropzones) {
                         const dzRect = {
@@ -293,19 +293,20 @@ export default function DragInterface(props: { content?: DragDropContent }) {
                           // Snapping!
                           const dzCenterX = dzRect.x + dzRect.width / 2;
                           const dzCenterY = dzRect.y + dzRect.height / 2;
-
-                          newPos = {
-                            // add a random offset to ensure Konva pushes an update for re-snapping an item to the same dropzone
-                            x:
-                              dzCenterX -
-                              itemRect.width / 2 +
-                              Math.random() * 0.001,
-                            y:
-                              dzCenterY -
-                              itemRect.height / 2 +
-                              Math.random() * 0.001,
-                          };
-                          break;
+                          newPos.x = dzCenterX - itemRect.width / 2
+                          newPos.y = dzCenterY - itemRect.height / 2
+                          // newPos = {
+                          //   // add a random offset to ensure Konva pushes an update for re-snapping an item to the same dropzone
+                          //   x:
+                          //     dzCenterX -
+                          //     itemRect.width / 2 +
+                          //     Math.random() * 0.001,
+                          //   y:
+                          //     dzCenterY -
+                          //     itemRect.height / 2 +
+                          //     Math.random() * 0.001,
+                          // };
+                          break
                         }
                       }
 
@@ -421,6 +422,15 @@ const DropzoneGroup = ({ dropzone }: { dropzone: Dropzone }) => {
           dash={[5, 5]}
           cornerRadius={5}
         />
+        <Text
+          text={dropzone.label}
+          width={dropzone.width}
+          height={dropzone.height}
+          align="center"
+          verticalAlign="middle"
+          fontSize={14}
+          fill="#333"
+        />
       </Group>
     </>
   );
@@ -454,44 +464,42 @@ const DraggableGroup = ({
   }
 
   return (
-    <>
-      <Group
-        id={item.id}
-        draggable={!isValidated}
-        x={item.initialX}
-        y={item.initialY}
+    <Group
+      id={item.id}
+      draggable={!isValidated}
+      x={item.initialX}
+      y={item.initialY}
+      width={item.width}
+      height={item.height}
+      onDragEnd={onDragEnd}
+      ref={shapeRef}
+    >
+      <Rect
         width={item.width}
         height={item.height}
-        onDragEnd={onDragEnd}
-        ref={shapeRef}
-      >
-        <Rect
-          width={item.width}
-          height={item.height}
-          fill={fillColor}
-          stroke={borderColor}
-          strokeWidth={isValidated ? 3 : 1}
-          shadowColor="black"
-          shadowBlur={5}
-          shadowOpacity={0.2}
-          cornerRadius={4}
-        />
-        <Text
-          text={item.text}
-          width={item.width}
-          height={item.height}
-          align="center"
-          verticalAlign="middle"
-          fontSize={14}
-          fill={
-            isValidated && isCorrect
-              ? "#16a34a"
-              : isValidated && !isCorrect
-                ? "#dc2626"
-                : "#000"
-          }
-        />
-      </Group>
-    </>
+        fill={fillColor}
+        stroke={borderColor}
+        strokeWidth={isValidated ? 3 : 1}
+        shadowColor="black"
+        shadowBlur={5}
+        shadowOpacity={0.2}
+        cornerRadius={4}
+      />
+      <Text
+        text={item.text}
+        width={item.width}
+        height={item.height}
+        align="center"
+        verticalAlign="middle"
+        fontSize={14}
+        fill={
+          isValidated && isCorrect
+            ? "#16a34a"
+            : isValidated && !isCorrect
+              ? "#dc2626"
+              : "#000"
+        }
+      />
+    </Group>
   );
 };
