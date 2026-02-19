@@ -425,7 +425,6 @@ const DropzoneGroup = ({ dropzone }: { dropzone: Dropzone }) => {
           verticalAlign="middle"
           fontSize={14}
           fill="#333"
-          visible={!isEditing}
         />
       </Group>
     </>
