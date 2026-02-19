@@ -266,6 +266,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
                         x: Math.max(0, Math.min(e.target.x(), stageSize.width - draggable.width)),
                         y: Math.max(0, Math.min(e.target.y(), stageSize.height - draggable.height)),
                       };
+                      console.log({ newPos, x: e.target.x(), y: e.target.y() })
 
                       for (const dz of content.dropzones) {
                         const dzRect = {
