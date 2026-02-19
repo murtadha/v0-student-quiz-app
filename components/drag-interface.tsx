@@ -190,7 +190,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
 
   // Preview state: track positions of draggables independently
   const [previewPositions, setPreviewPositions] = useState<
-    Record<string, { x: number; y: number }>
+    Record<string, { key?: number | undefined; x: number; y: number }>
   >({});
 
   // Update stage size based on container - FORCE SQUARE ASPECT RATIO
@@ -252,7 +252,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
 
                 return (
                   <DraggableGroup
-                    key={draggable.id}
+                    key={draggable.id + currentPos?.key}
                     item={{
                       ...draggable,
                       initialX: currentPos.x,
@@ -263,6 +263,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
                     onDragEnd={(e: any) => {
                       // Find intersecting dropzone
                       let newPos = {
+                        key: Date.now(),
                         x: Math.max(0, Math.min(e.target.x(), stageSize.width - draggable.width)),
                         y: Math.max(0, Math.min(e.target.y(), stageSize.height - draggable.height)),
                       };
@@ -294,18 +295,20 @@ export default function DragInterface(props: { content?: DragDropContent }) {
                           const dzCenterX = dzRect.x + dzRect.width / 2;
                           const dzCenterY = dzRect.y + dzRect.height / 2;
 
-                          newPos = {
-                            // add a random offset to ensure Konva pushes an update for re-snapping an item to the same dropzone
-                            x:
-                              dzCenterX -
-                              itemRect.width / 2 +
-                              Math.random() * 0.001,
-                            y:
-                              dzCenterY -
-                              itemRect.height / 2 +
-                              Math.random() * 0.001,
-                          };
-                          break;
+                          newPos.x = dzCenterX - itemRect.width / 2
+                          newPos.y = dzCenterY - itemRect.height / 2
+                          // newPos = {
+                          //   // add a random offset to ensure Konva pushes an update for re-snapping an item to the same dropzone
+                          //   x:
+                          //     dzCenterX -
+                          //     itemRect.width / 2 +
+                          //     Math.random() * 0.001,
+                          //   y:
+                          //     dzCenterY -
+                          //     itemRect.height / 2 +
+                          //     Math.random() * 0.001,
+                          // };
+                          break
                         }
                       }
 
@@ -464,7 +467,6 @@ const DraggableGroup = ({
 
   return (
     <Group
-      key={Date.now()}
       id={item.id}
       draggable={!isValidated}
       x={item.initialX}
