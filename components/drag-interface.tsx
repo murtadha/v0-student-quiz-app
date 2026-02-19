@@ -263,8 +263,8 @@ export default function DragInterface(props: { content?: DragDropContent }) {
                     onDragEnd={(e: any) => {
                       // Find intersecting dropzone
                       let newPos = {
-                        x: Math.max(0, Math.min(e.target.x(), stageSize.width)),
-                        y: Math.max(0, Math.min(e.target.y(), stageSize.height)),
+                        x: Math.max(0, Math.min(e.target.x(), stageSize.width - itemRect.width)),
+                        y: Math.max(0, Math.min(e.target.y(), stageSize.height - itemRect.height)),
                       };
 
                       for (const dz of content.dropzones) {
