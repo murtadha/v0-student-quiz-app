@@ -56,12 +56,12 @@ export function QuizInterface() {
   }, [tenant, userId, lessonId, widgetId]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const found = document.querySelector("main ~ div")
-      if (!found) return
-      found.remove()
-      clearInterval(interval)
-    }, 200)
+    // const interval = setInterval(() => {
+    //   const found = document.querySelector("main ~ div")
+    //   if (!found) return
+    //   found.remove()
+    //   clearInterval(interval)
+    // }, 200)
   }, [])
 
   const handleSubmit = async () => {
