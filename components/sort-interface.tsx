@@ -88,7 +88,7 @@ function SortableItem({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : 1,
+    opacity: isDragging ? 0 : 1,
     zIndex: isDragging ? 50 : undefined,
   }
 
@@ -357,7 +357,7 @@ export function SortInterface() {
             >
               تحقق من الترتيب
             </Button>
-          ) : !isAllCorrect ? (
+          ) : (!isAllCorrect || true) ? (
             <Button
               onClick={() => {
                 window.location.search = window.location.search + "&success"
