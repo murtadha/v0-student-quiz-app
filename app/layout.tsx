@@ -18,6 +18,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           integrity="sha384-WcoG4HRXMzYzfCgiyfrySxx90XSl2rxY5mnVY5TwtWE6KLrArNKn0T/mOgNL0Mmi"
           crossOrigin="anonymous"
         />
+        <script src="https://esm.run/mathlive" type="module" />
       </head>
       <body className={font.className}>{children}</body>
     </html>
@@ -25,5 +26,5 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 
 export const metadata = {
-      generator: 'v0.app'
-    };
+  generator: 'v0.app'
+};
