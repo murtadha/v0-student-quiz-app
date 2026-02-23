@@ -309,6 +309,10 @@ function MathKeyboard({ value, onChange }: { value: string; onChange: (_: string
         math-field::part(menu-toggle) {
           display: none;
         }
+        
+        .MLK__row .horizontal-rule {
+          border-width: 0px !important;
+        }
       `}</style>
     </div>
   )
