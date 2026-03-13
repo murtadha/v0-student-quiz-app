@@ -288,7 +288,12 @@ export function MatchInterface() {
             <Button
               onClick={() => {
                 window.location.search = window.location.search + `&success=${incorrectCount}`
-                updateLessonHistory(widgetId, leftWords.length, Math.max(0, leftWords.length - incorrectCount), 'MATCH')
+                updateLessonHistory(
+                  widgetId,
+                  leftWords.length,
+                  isComplete ? Math.max(0, leftWords.length - incorrectCount) : 0,
+                  'MATCH'
+                )
               }}
               size="lg"
               className="w-full h-12"
