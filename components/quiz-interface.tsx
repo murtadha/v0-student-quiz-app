@@ -46,13 +46,14 @@ export function QuizInterface() {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [feedbackType, setFeedbackType] = useState<"correct" | "partial" | "incorrect" | "error" | null>(null)
   const [tryCount, setTryCount] = useState(0);
-  const [skippable, setSkippable] = useState(false)
+  const [skippable, setSkippable] = useState(true)
   const [showMathKeyboard, setShowMathKeyboard] = useState(false)
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    fetchIsWidgetSkippable(tenant, userId, lessonId, widgetId).then(setSkippable);
+    // TODO revert this
+    // fetchIsWidgetSkippable(tenant, userId, lessonId, widgetId).then(setSkippable);
   }, [tenant, userId, lessonId, widgetId]);
 
   useEffect(() => {

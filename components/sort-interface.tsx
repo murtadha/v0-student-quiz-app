@@ -25,6 +25,7 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { useContentFromUrl } from "@/lib/utils"
+import { updateLessonHistory } from "@/app/utils"
 
 const DEFAULT_PROMPT = 'رتّب الجمل بالترتيب الصحيح'
 const SAMPLE_SENTENCES = [
@@ -170,10 +171,9 @@ function DragOverlayItem({ item, index }: { item: SortItem; index: number }) {
 // ── Main Component ──
 
 export function SortInterface() {
-  // const searchParams = useSearchParams()
-  // const rawSentences = searchParams.get("sentences")
+  const search = useSearchParams()
+  const widgetId = search.get("widgetId") || '000000000000000000000000'
   const content = useContentFromUrl<Content>()
-  const rawSentences = content.sentences
   const correctOrder = content.sentences || SAMPLE_SENTENCES
 
   // const correctOrder = useMemo(() => {
@@ -361,6 +361,7 @@ export function SortInterface() {
             <Button
               onClick={() => {
                 window.location.search = window.location.search + "&success"
+                updateLessonHistory(widgetId, correctOrder.length, correctCount, 'SORT');
               }}
               size="lg"
               className="w-full h-14 rounded-2xl text-lg font-medium"

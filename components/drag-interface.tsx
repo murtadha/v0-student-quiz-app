@@ -12,6 +12,8 @@ import {
 } from "react-konva";
 import useImage from "use-image";
 import { remapStaticUrl, useContentFromUrl } from "@/lib/utils";
+import { updateLessonHistory } from "@/app/utils";
+import { useSearchParams } from "next/navigation";
 
 // Types (should be in types.ts but defining here for now based on schema)
 export interface Dropzone {
@@ -136,7 +138,8 @@ const DEFAULT_CONTENT: DragDropContent = {
 };
 
 export default function DragInterface(props: { content?: DragDropContent }) {
-  // const search = useSearchParams();
+  const search = useSearchParams()
+  const widgetId = search.get("widgetId") || '000000000000000000000000'
   // if (!content || !content?.dropzones) content = { ...DEFAULT_CONTENT };
   const rawContent = useContentFromUrl<DragDropContent>(DEFAULT_CONTENT)
 
@@ -389,6 +392,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
         <Button
           onClick={() => {
             window.location.search = window.location.search + "&success"
+            updateLessonHistory(widgetId, content.draggables.length, score, 'DRAG');
           }}
           size="lg"
           className="w-full h-12 px-4 mb-4"
