@@ -107,7 +107,7 @@ function SortableItem({
   }
 
   return (
-    <div ref={setNodeRef} style={style} className={containerClass}>
+    <div ref={setNodeRef} style={style} className={containerClass} {...attributes} {...listeners}>
       {/* Position number */}
       <div
         className={`flex items-center justify-center px-3 rounded-r-xl border-l-2 text-sm font-bold shrink-0 transition-colors duration-200 ${isCorrect
@@ -129,8 +129,6 @@ function SortableItem({
       {!hasChecked && (
         <div
           className="flex items-center pl-2 pr-3 text-muted-foreground shrink-0 cursor-grab active:cursor-grabbing touch-none"
-          {...attributes}
-          {...listeners}
         >
           <GripVertical className="w-5 h-5" />
         </div>
