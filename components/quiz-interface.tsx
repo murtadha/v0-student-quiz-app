@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { CaseSensitive, Send, Sparkles, Superscript } from "lucide-react"
-import { evaluateAnswer, fetchIsWidgetSkippable } from "@/lib/actions"
+import { evaluateAnswer, fetchIsWidgetSkippable, logAnswer } from "@/lib/actions"
 import { LatexText } from "@/components/latex-text"
 import { updateLessonHistory } from "@/app/utils"
 import { cn, useContentFromUrl } from "@/lib/utils"
@@ -74,6 +74,11 @@ export function QuizInterface() {
       .then((result) => {
         setFeedback(result.feedback)
         setFeedbackType(result.type)
+        logAnswer({
+          tenant, userId, lessonId, widgetId, subject, lesson, question, userAnswer: answer, correctAnswer,
+          aiResponse: result.type === 'correct' ? 'Acceptable' : result.feedback,
+          timeTaken: result.timeTaken
+        })
       })
       .catch((error) => {
         console.error("[v0] Error evaluating answer:", error)
