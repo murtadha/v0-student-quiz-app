@@ -3,7 +3,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
 const gemini = new GoogleGenerativeAI(GOOGLE_API_KEY ?? '').getGenerativeModel({
-  model: 'gemini-2.5-flash',
+  // model: 'gemini-2.5-flash',
+  model: 'gemini-3.1-flash-lite-preview',
   // model: 'gemini-flash-lite-latest',
 })
 
@@ -44,6 +45,28 @@ export async function fetchIsWidgetSkippable(
   return json?.[0]?.count > 0;
 }
 
+export async function logAnswer({ tenant, userId, lessonId, widgetId, ...rest }: Record<string, unknown>) {
+  return await fetch(ADMIN_API(tenant as string), {
+    method: 'POST',
+    body: JSON.stringify({
+      collection: 'logs',
+      documents: {
+        type: 'ai_chat_bot_response',
+        userId: { $oid: userId },
+        lessonId: { $oid: lessonId },
+        widgetId: { $oid: widgetId },
+        // subject,
+        // lesson,
+        // question,
+        // userAnswer,
+        // correctAnswer,
+        ...rest,
+      },
+    }),
+    headers: { Authorization: `Bearer ${process.env.ADMIN_API_TOKEN}` },
+  }).catch(console.warn).then(res => res?.text?.()).then(console.log)
+}
+
 export async function evaluateAnswer(
   userId: string,
   lessonId: string,
@@ -57,6 +80,7 @@ export async function evaluateAnswer(
 ): Promise<{
   type: "correct" | "partial" | "incorrect"
   feedback: string
+  timeTaken: number
 }> {
   const prompt = getPrompt(
     subject,
@@ -66,50 +90,37 @@ export async function evaluateAnswer(
     correctAnswer,
   );
 
-  const log = (body: Record<string, unknown>) => fetch(ADMIN_API(tenant), {
-    method: 'POST',
-    body: JSON.stringify({
-      collection: 'logs',
-      documents: {
-        type: 'ai_chat_bot_response',
-        userId: { $oid: userId },
-        lessonId: { $oid: lessonId },
-        widgetId: { $oid: widgetId },
-        subject,
-        lesson,
-        question,
-        userAnswer,
-        correctAnswer,
-        ...body,
-      },
-    }),
-    headers: { Authorization: `Bearer ${process.env.ADMIN_API_TOKEN}` },
-  }).catch(console.warn).then(res => res?.text?.()).then(console.log)
-
   const now = Date.now();
   let error;
   let i;
   for (i = 0; i < 3; i++) {
     try {
       const result = await gemini.generateContent(prompt);
+      const timeTaken = Date.now() - now;
       const content = result.response.text();
-      await log({ aiResponse: content, timeTaken: Date.now() - now, try: i });
+      // await log({ aiResponse: content, timeTaken: Date.now() - now, try: i });
       if (content === 'Acceptable') {
         const index = Math.floor(Math.random() * CORRECT_FEEDBACK.length);
-        return { type: "correct", feedback: CORRECT_FEEDBACK[index] + correctAnswer }
+        return { type: "correct", feedback: CORRECT_FEEDBACK[index] + correctAnswer, timeTaken }
       } else {
-        return { type: "incorrect", feedback: content }
+        return { type: "incorrect", feedback: content, timeTaken }
       }
     } catch (e) {
       error = e
     }
   }
 
-  await log({
+  // await log({
+  //   error: (error?.message ?? '') + '\n' + error?.toString(),
+  //   timeTaken: Date.now() - now,
+  //   try: i,
+  // });
+  await logAnswer({
+    tenant, userId, lessonId, widgetId, subject, lesson, question, userAnswer, correctAnswer,
     error: (error?.message ?? '') + '\n' + error?.toString(),
     timeTaken: Date.now() - now,
-    try: i,
-  });
+    try: i
+  })
   // console.error(process.env.GOOGLE_API_KEY, error);
   throw error;
 
