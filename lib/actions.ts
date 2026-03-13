@@ -3,8 +3,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
 const gemini = new GoogleGenerativeAI(GOOGLE_API_KEY ?? '').getGenerativeModel({
-  model: 'gemini-2.5-flash',
-  // model: 'gemini-3.1-flash-lite-preview',
+  // model: 'gemini-2.5-flash',
+  model: 'gemini-3.1-flash-lite-preview',
   // model: 'gemini-flash-lite-latest',
 })
 
