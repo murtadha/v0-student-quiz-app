@@ -110,6 +110,7 @@ export async function generateSpeech(text: string): Promise<{ audioData: string 
     // Check if audio already exists in S3
     const cachedAudio = await getAudioFromS3(hash)
     if (cachedAudio) {
+      console.log('Cached audio found')
       return { audioData: cachedAudio }
     }
 
