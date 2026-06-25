@@ -47,6 +47,7 @@ export interface ImageFit {
 }
 
 export interface DragDropContent {
+  prompt?: string;
   image?: string;
   imageFit?: ImageFit;
   dropzones: Dropzone[];
@@ -69,6 +70,7 @@ const URLImage = ({ src, x, y, width, height, ...props }: any) => {
 
 const DEFAULT_WIDTH = 600;
 const DEFAULT_CONTENT: DragDropContent = {
+  prompt: 'انقل الكلمات الى مكانها',
   dropzones: [
     {
       id: "91064b19-1951-48f2-a9e8-edb32023d855",
@@ -215,7 +217,7 @@ export default function DragInterface(props: { content?: DragDropContent }) {
         className="mx-auto my-auto"
       >
         <h1 className="text-2xl font-bold text-foreground mb-2 text-center max-w-screen">
-          انقل الكلمات الى مكانها الصحيح
+          {content.prompt || 'انقل الكلمات الى مكانها الصحيح'}
         </h1>
         <div style={{ ...stageSize }}>
           <Stage
