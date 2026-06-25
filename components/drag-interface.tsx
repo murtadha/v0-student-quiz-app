@@ -23,6 +23,7 @@ export interface Dropzone {
   width: number;
   height: number;
   label?: string;
+  color?: string;
 }
 
 export interface DraggableItem {
@@ -422,7 +423,7 @@ const DropzoneGroup = ({ dropzone }: { dropzone: Dropzone }) => {
         <Rect
           width={dropzone.width}
           height={dropzone.height}
-          fill="rgba(0, 150, 255, 0.2)"
+          fill={dropzone?.color ?? "rgba(0, 150, 255, 0.2)"}
           stroke={"#999"}
           strokeWidth={2}
           dash={[5, 5]}
