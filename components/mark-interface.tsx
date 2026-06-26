@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle, RotateCcw } from "lucide-react"
 import { useContentFromUrl } from "@/lib/utils"
+import { updateLessonHistory } from "@/app/utils"
 
 const SAMPLE_PROMPT = "اين يقع المفعول به في قوله تعالى:"
 const SAMPLE_PARAGRAPH = "{إِنَّمَا يَخْشَى *اللَّهَ* مِنْ عِبَادِهِ الْعُلَمَاءُ}"
@@ -59,7 +60,8 @@ type Content = {
 }
 
 export function MarkInterface() {
-  // const searchParams = useSearchParams()
+  const search = useSearchParams()
+  const widgetId = search.get("widgetId") || '000000000000000000000000'
   // const prompt = searchParams.get("prompt") || SAMPLE_PROMPT
   // const paragraph = searchParams.get("paragraph") || SAMPLE_PARAGRAPH
   const content = useContentFromUrl<Content>()
@@ -252,6 +254,12 @@ export function MarkInterface() {
             <Button
               onClick={() => {
                 window.location.search = window.location.search + "&success"
+                const missed = tokens.filter(t => t.state === "missed").length;
+                const incorrect = tokens.filter(t => t.state === "incorrect").length;
+                const correct = tokens.filter(t => t.state === "correct").length;
+                const final = Math.floor(Math.max(0, correct - (missed / 2) - (incorrect / 2)));
+                const totalMark = tokens.filter(t => t.isCorrect).length;
+                updateLessonHistory(widgetId, totalMark, final, "MARK")
               }}
               size="lg"
               className="w-full h-14 rounded-2xl text-lg font-medium"

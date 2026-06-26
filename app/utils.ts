@@ -11,6 +11,18 @@ const { selectedLesson, quizStartTime } = store.getState().lessonReducer;
 const timeSpentMs = Date.now() - quizStartTime;
 
 store.dispatch({
+  type: "history/addItemToHistory",
+  payload: {
+    totalMarks: ${totalMarks},
+    passingMarks: ${totalMarks / 2},
+    quizPoints: ${obtainedMarks},
+    quizName: "${quizType}",
+    quizTitle: "",
+    isQuizPassed: ${obtainedMarks >= totalMarks / 2},
+  }
+});
+
+store.dispatch({
   type: "history/addQuestion",
   payload: { isCorrect: ${obtainedMarks >= totalMarks / 2} }
 });
