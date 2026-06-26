@@ -253,13 +253,11 @@ export function MarkInterface() {
           ) : (
             <Button
               onClick={() => {
-                window.location.search = window.location.search + "&success"
-                const missed = tokens.filter(t => t.state === "missed").length;
+                window.location.search = window.location.search + "&success";
+                const { total, correct } = score ?? { total: 0, correct: 0 };
                 const incorrect = tokens.filter(t => t.state === "incorrect").length;
-                const correct = tokens.filter(t => t.state === "correct").length;
-                const final = Math.floor(Math.max(0, correct - (missed / 2) - (incorrect / 2)));
-                const totalMark = tokens.filter(t => t.isCorrect).length;
-                updateLessonHistory(widgetId, totalMark, final, "MARK")
+                const obtained = Math.floor(Math.max(0, correct - (incorrect / 2)));
+                updateLessonHistory(widgetId, total, obtained, "MARK");
               }}
               size="lg"
               className="w-full h-14 rounded-2xl text-lg font-medium"
